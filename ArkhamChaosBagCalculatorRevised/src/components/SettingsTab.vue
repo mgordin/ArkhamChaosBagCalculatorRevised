@@ -21,6 +21,7 @@
         <v-select
           label="Handling redraws over max"
           :items="['Treat as autofail']"
+          v-model="mainstore.redrawHandling"
         ></v-select>
       </v-col>
     </v-row>

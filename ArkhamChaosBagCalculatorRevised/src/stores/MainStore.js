@@ -6,6 +6,7 @@ export const useMainStore = defineStore('mainstore', {
     probabilitiesChart_y: [0, 10, 25, 40, 50, 80, 92, 92, 92, 92, 92],
     tab: "one",
     redrawMax: 4,
+    redrawHandling: "Treat as autofail",
     orderedTokens: ['+1', '0', '-1', '-2', '-3', '-4', '-5', '-6', '-7', '-8', 
         'skull', 'cultist','tablet','elderThing','star','autofail', 'bless', 'curse', 'frost'],
     tokens: {
