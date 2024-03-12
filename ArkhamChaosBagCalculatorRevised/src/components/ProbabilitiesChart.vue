@@ -26,7 +26,7 @@ const chartData = computed(() => {
     datasets: [
       {
         data: mainstore.probabilitiesChart_y,
-        backgroundColor: "#9BD0F5",
+        backgroundColor: "#64B5F6",
         xAxisID: "x-axis",
         yAxisID: "y-axis",
       },

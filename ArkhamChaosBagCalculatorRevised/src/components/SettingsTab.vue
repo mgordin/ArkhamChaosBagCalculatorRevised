@@ -15,7 +15,7 @@
   <v-container>
     <v-row>
       <v-col cols="2">
-        <v-text-field label="Redraw max" model="mainstore.redrawMax"></v-text-field>
+        <v-text-field label="Redraw max" v-model="mainstore.redrawMax"></v-text-field>
       </v-col>
       <v-col cols="3">
         <v-select
