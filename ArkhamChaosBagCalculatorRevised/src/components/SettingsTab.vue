@@ -20,16 +20,34 @@
       <v-col cols="3">
         <v-select
           label="Handling redraws over max"
-          :items="['Treat as autofail']"
+          :items="[
+            'Treat as autofail',
+            'Treat next token as -1',
+            'Treat next token as -2',
+            'Treat next token as -3',
+            'Treat next token as -4',
+            'Treat next token as -5',
+            'Treat next token as -6',
+            'Treat next token as -7',
+            'Treat next token as -8',
+          ]"
           v-model="mainstore.redrawHandling"
         ></v-select>
       </v-col>
+      <v-col cols="auto">
+        <v-btn @click="mainstore.chanceOfNRedraws(mainstore.redrawMax)" variant="tonal"
+          >Calculate chance of N redraws</v-btn
+        >
+      </v-col>
     </v-row>
+
+    <RedrawChanceChart></RedrawChanceChart>
   </v-container>
 </template>
 
 <script setup>
 import { useMainStore } from "@/stores/MainStore";
+import RedrawChanceChart from "./RedrawChanceChart";
 
 const mainstore = useMainStore();
 </script>

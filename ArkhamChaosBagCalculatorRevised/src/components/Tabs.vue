@@ -3,7 +3,9 @@
     <v-tabs v-model="mainstore.tab" bg-color="primary">
       <v-tab value="one">Tokens</v-tab>
       <v-tab value="two">Abilities</v-tab>
-      <v-tab value="three">Settings</v-tab>
+      <v-tab value="three" @click="mainstore.chanceOfNRedraws(mainstore.redrawMax)"
+        >Settings</v-tab
+      >
     </v-tabs>
 
     <v-card-text>

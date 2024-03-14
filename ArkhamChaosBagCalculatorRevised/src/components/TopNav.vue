@@ -24,7 +24,9 @@
       type="number"
     ></v-text-field>
 
-    <v-btn variant="tonal"> Calculate Probabilities </v-btn>
+    <v-btn variant="tonal" @click="mainstore.chanceOfSuccess">
+      Calculate Probabilities
+    </v-btn>
   </v-app-bar>
 </template>
 

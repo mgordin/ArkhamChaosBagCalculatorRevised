@@ -1,5 +1,5 @@
 <template>
-  <Bar id="probabilities-chart" :options="chartOptions" :data="chartData" />
+  <Bar id="redraw-chance-chart" :options="chartOptions" :data="chartData" />
 </template>
 
 <script setup>
@@ -23,10 +23,10 @@ ChartJS.register(Title, Tooltip, BarElement, CategoryScale, LinearScale, ChartDa
 
 const chartData = computed(() => {
   return {
-    labels: mainstore.probabilitiesChart_x,
+    labels: mainstore.range(1, parseInt(mainstore.redrawMax)),
     datasets: [
       {
-        data: mainstore.probabilitiesChart_y,
+        data: mainstore.redrawChanceChart_y,
         backgroundColor: "#64B5F6",
         xAxisID: "x-axis",
         yAxisID: "y-axis",
@@ -43,7 +43,7 @@ const chartOptions = {
       axis: "x",
       title: {
         display: true,
-        text: "Skill value minus test difficulty",
+        text: "# of Redraws",
         font: {
           size: 20,
         },
@@ -54,7 +54,7 @@ const chartOptions = {
       max: 100,
       title: {
         display: true,
-        text: "Probability of success (%)",
+        text: ["Probability of that", "many redraws (%)"],
         font: {
           size: 20,
         },
@@ -74,7 +74,8 @@ const chartOptions = {
 </script>
 
 <style scoped>
-#probabilities-chart {
+#redraw-chance-chart {
   max-height: 40vh;
+  max-width: 80vw;
 }
 </style>
