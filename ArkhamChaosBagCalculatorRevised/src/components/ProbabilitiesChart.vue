@@ -68,6 +68,9 @@ const chartOptions = {
         weight: "bold",
         size: "20",
       },
+      formatter: function (value, context) {
+        return Math.ceil(value) + "%";
+      },
     },
   },
 };
