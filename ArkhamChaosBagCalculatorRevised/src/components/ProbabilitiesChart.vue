@@ -18,6 +18,7 @@ import { useMainStore } from "@/stores/MainStore";
 import { computed } from "vue";
 
 const mainstore = useMainStore();
+mainstore.chanceOfSuccess();
 
 ChartJS.register(Title, Tooltip, BarElement, CategoryScale, LinearScale, ChartDataLabels);
 

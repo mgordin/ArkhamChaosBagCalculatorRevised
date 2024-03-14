@@ -1,5 +1,21 @@
 <template>
   <div class="text-h3 pa-mb-4">Chaos Bag Composition</div>
+  <v-container>
+    <v-row align="center">
+      <v-col cols="auto"> <p>Apply a preset config to the token bag?</p></v-col>
+      <v-col cols="5">
+        <v-select label="Preset token config" :items="mainstore.tokenConfigs"></v-select>
+      </v-col>
+      <v-col cols="auto">
+        <v-btn color="primary" @click="mainstore.applyTokenConfig"
+          ><v-icon icon="mdi-set-right" start></v-icon>Apply token config</v-btn
+        ></v-col
+      >
+    </v-row>
+  </v-container>
+
+  <v-divider></v-divider>
+
   <v-form>
     <v-container>
       <v-row v-for="token in mainstore.orderedTokens" align="center">

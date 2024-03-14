@@ -87,7 +87,8 @@ export const useMainStore = defineStore('mainstore', {
         'bless': {},
         'curse': {},
         'frost': {}
-    }
+    },
+    tokenConfigs: ["a","b"]
   }),
   getters: {
 
@@ -104,6 +105,8 @@ export const useMainStore = defineStore('mainstore', {
         this.prepareModifiers();
         this.calculationStep(bag, 0, 1 / bag.length, null, 1, this.tokens['autofail']["value"], resultsTracker);
         this.probabilitiesChart_y = this.cumulativeProb(resultsTracker);
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
         //saveData(saveName, data);
     },
 
@@ -320,6 +323,11 @@ export const useMainStore = defineStore('mainstore', {
         if ((currentN + 1) <= maxN) {
             this.redrawProb(newProb, allCount - 1, redrawCount - 1, currentN + 1, maxN)
         }
+    },
+
+    // Apply the selected token config
+    applyTokenConfig() {
+
     }
 
   },
