@@ -7,6 +7,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@coreui/icons": "^3.0.1",
+    "@coreui/icons-vue": "^2.0.0",
     "@mdi/font": "7.0.96",
     "chart.js": "^4.4.2",
     "chartjs-plugin-datalabels": "^2.2.0",

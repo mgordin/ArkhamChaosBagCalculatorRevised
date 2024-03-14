@@ -2,9 +2,9 @@
   <div class="text-h3 pa-mb-4">Chaos Bag Composition</div>
   <v-form>
     <v-container>
-      <v-row v-for="token in mainstore.orderedTokens">
+      <v-row v-for="token in mainstore.orderedTokens" align="center">
         <v-col cols="2">
-          <v-list-header class="text-h5">{{
+          <v-list-header class="text-h5 token-title">{{
             mainstore.tokens[token].fullName
           }}</v-list-header>
         </v-col>

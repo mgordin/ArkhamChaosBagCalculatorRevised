@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 
 export const useMainStore = defineStore('mainstore', {
   state: () => ({
-    probabilitiesChart_x: ["-2","-1","0","+1","+2","+3","+4","+5","+6","+7","+8"],
+    probabilitiesChart_x: ["-2", "-1","0","+1","+2","+3","+4","+5","+6","+7","+8"],
     probabilitiesChart_y: [0, 10, 25, 40, 50, 80, 92, 92, 92, 92, 92],
     tab: "one",
     redrawMax: 4,

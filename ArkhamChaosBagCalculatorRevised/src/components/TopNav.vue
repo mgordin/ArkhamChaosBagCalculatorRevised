@@ -1,7 +1,7 @@
 <template>
-  <v-app-bar :elevation="2">
+  <v-app-bar :elevation="2" color="grey-darken-3">
     <template v-slot:prepend>
-      <v-app-bar-nav-icon></v-app-bar-nav-icon>
+      <v-icon icon="mdi-pentagram" start></v-icon>
     </template>
 
     <v-app-bar-title class="grow">Arkham Chaos Bag Calculator</v-app-bar-title>
@@ -24,7 +24,11 @@
       type="number"
     ></v-text-field>
 
-    <v-btn variant="tonal" @click="mainstore.chanceOfSuccess">
+    <v-btn variant="tonal" color="green"  @click="mainstore.chanceOfSuccess">
+      <v-icon
+          icon="mdi-play"
+          start
+        ></v-icon>
       Calculate Probabilities
     </v-btn>
   </v-app-bar>
@@ -39,5 +43,6 @@ const mainstore = useMainStore();
 <style scoped>
 .title-bar-input-field {
   max-width: 10vw;
+  margin-right: 1vw;
 }
 </style>
