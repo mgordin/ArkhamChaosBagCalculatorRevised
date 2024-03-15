@@ -1,4 +1,6 @@
 import { defineStore } from 'pinia'
+import presetTokenBags from '../assets/PresetTokenBags.json';
+
 
 export const useMainStore = defineStore('mainstore', {
   state: () => ({
@@ -88,7 +90,10 @@ export const useMainStore = defineStore('mainstore', {
         'curse': {},
         'frost': {}
     },
-    tokenConfigs: ["a","b"]
+    tokenConfigs: ["a","b"],
+    campaignOptions: presetTokenBags["campaignOptions"],
+    presetTokenBags: presetTokenBags["campaignTokenSets"],
+    selectedCampaignTokenSet: null
   }),
   getters: {
 
@@ -327,7 +332,8 @@ export const useMainStore = defineStore('mainstore', {
 
     // Apply the selected token config
     applyTokenConfig() {
-
+        this.tokens = this.presetTokenBags[this.selectedCampaignTokenSet];
+        this.chanceOfSuccess();
     }
 
   },

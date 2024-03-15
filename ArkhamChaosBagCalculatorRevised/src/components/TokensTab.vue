@@ -2,9 +2,15 @@
   <div class="text-h3 pa-mb-4">Chaos Bag Composition</div>
   <v-container>
     <v-row align="center">
-      <v-col cols="auto"> <p>Apply a preset config to the token bag?</p></v-col>
+      <v-col cols="auto">
+        <p class="text-body-1">Apply a preset config to the token bag?</p></v-col
+      >
       <v-col cols="5">
-        <v-select label="Preset token config" :items="mainstore.tokenConfigs"></v-select>
+        <v-select
+          label="Preset token config"
+          :items="mainstore.campaignOptions"
+          v-model="mainstore.selectedCampaignTokenSet"
+        ></v-select>
       </v-col>
       <v-col cols="auto">
         <v-btn color="primary" @click="mainstore.applyTokenConfig"
@@ -53,7 +59,7 @@
         <v-col cols="3">
           <v-select
             clearable
-            label="Autofail after"
+            label="Treat as autofail if after..."
             :items="[
               'Bless',
               'Curse',
