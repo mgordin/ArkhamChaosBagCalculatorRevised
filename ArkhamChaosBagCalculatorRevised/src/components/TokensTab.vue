@@ -18,6 +18,88 @@
         ></v-col
       >
     </v-row>
+    <v-row align="center">
+      <v-col cols="auto">
+        <v-dialog max-width="500">
+          <template v-slot:activator="{ props: activatorProps }">
+            <v-btn v-bind="activatorProps" color="blue" text="Open Dialog" variant="flat"
+              ><v-icon icon="mdi-content-save" start></v-icon>Save Custom Token Bag
+              Config</v-btn
+            >
+          </template>
+
+          <template v-slot:default="{ isActive }">
+            <v-card title="Dialog">
+              <v-card-text>
+                <v-text-field
+                  label="Save name"
+                  v-model="mainstore.saveName"
+                ></v-text-field>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+
+                <v-btn text="Cancel" @click="isActive.value = false"></v-btn>
+                <v-btn
+                  text="Save"
+                  @click="
+                    mainstore.save();
+                    if ((mainstore.saveName != null) & (mainstore.saveName != '')) {
+                      isActive.value = false;
+                    }
+                  "
+                ></v-btn>
+              </v-card-actions>
+            </v-card>
+          </template>
+        </v-dialog>
+      </v-col>
+      <v-col cols="auto">
+        <v-dialog max-width="500">
+          <template v-slot:activator="{ props: activatorProps }">
+            <v-btn v-bind="activatorProps" color="blue" text="Open Dialog" variant="flat"
+              ><v-icon icon="mdi-import" start></v-icon>Load Custom Token Bag
+              Config</v-btn
+            >
+          </template>
+
+          <template v-slot:default="{ isActive }">
+            <v-card title="Dialog">
+              <v-card-text>
+                <v-select
+                  label="Load token bag config"
+                  :items="mainstore.savedTokenBagConfigs"
+                  v-model="mainstore.loadName"
+                ></v-select>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+
+                <v-btn
+                  text="Delete Selected"
+                  color="warning"
+                  @click="
+                    mainstore.deleteSave();
+                    if (mainstore.loadName == null) {
+                      isActive.value = false;
+                    }
+                  "
+                ></v-btn>
+                <v-btn text="Cancel" @click="isActive.value = false"></v-btn>
+                <v-btn
+                  text="Load"
+                  color="blue"
+                  @click="
+                    mainstore.load();
+                    isActive.value = false;
+                  "
+                ></v-btn>
+              </v-card-actions>
+            </v-card>
+          </template>
+        </v-dialog>
+      </v-col>
+    </v-row>
   </v-container>
 
   <v-divider></v-divider>
@@ -42,6 +124,7 @@
             v-model="mainstore.tokens[token].value"
             label="Value"
             type="number"
+            :disabled="mainstore.tokens[token].autofail"
           ></v-text-field>
         </v-col>
         <v-col cols="auto">
@@ -54,6 +137,7 @@
           <v-checkbox
             v-model="mainstore.tokens[token].autofail"
             label="Autofail?"
+            @click="mainstore.toggleTokenValueOnAutofailSelect(token)"
           ></v-checkbox>
         </v-col>
         <v-col cols="3">
@@ -81,6 +165,8 @@
 import { useMainStore } from "@/stores/MainStore";
 
 const mainstore = useMainStore();
+
+mainstore.listAllSaved();
 </script>
 
 <style scoped></style>

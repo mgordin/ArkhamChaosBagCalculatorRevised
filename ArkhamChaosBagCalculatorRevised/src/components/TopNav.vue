@@ -4,7 +4,9 @@
       <v-icon icon="mdi-pentagram" start></v-icon>
     </template>
 
-    <v-app-bar-title class="grow">Arkham Chaos Bag Calculator</v-app-bar-title>
+    <v-app-bar-title class="grow"
+      >Arkham Chaos Bag Probability Calculator</v-app-bar-title
+    >
     <v-text-field
       class="title-bar-input-field"
       label="Bless"
@@ -24,11 +26,8 @@
       type="number"
     ></v-text-field>
 
-    <v-btn variant="tonal" color="green"  @click="mainstore.chanceOfSuccess">
-      <v-icon
-          icon="mdi-play"
-          start
-        ></v-icon>
+    <v-btn variant="tonal" color="green" @click="mainstore.chanceOfSuccess">
+      <v-icon icon="mdi-play" start></v-icon>
       Calculate Probabilities
     </v-btn>
   </v-app-bar>

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import presetTokenBags from '../assets/PresetTokenBags.json';
+import CampaignsAndCards from '../assets/CampaignsAndCards.json';
 
 
 export const useMainStore = defineStore('mainstore', {
@@ -34,6 +34,7 @@ export const useMainStore = defineStore('mainstore', {
         "frost": { count: 0, value: -1, redraw: true, autofailAfter: "frost", autofail: false, fullName: "Frost", order: 18 }
     },
     abilitiesActive: [],
+    abilities: CampaignsAndCards["abilityOptions"],
     abilityEffects: {
         "DefianceSkull": {
             "skull": { "type": "s", "value": 0, "param": "noRedraw" }
@@ -90,10 +91,33 @@ export const useMainStore = defineStore('mainstore', {
         'curse': {},
         'frost': {}
     },
-    tokenConfigs: ["a","b"],
-    campaignOptions: presetTokenBags["campaignOptions"],
-    presetTokenBags: presetTokenBags["campaignTokenSets"],
-    selectedCampaignTokenSet: null
+    defaultTokenValues: {
+        '+1': 1,
+        '0': 0,
+        '-1': -1,
+        '-2': -2,
+        '-3': -3,
+        '-4': -4,
+        '-5': -5,
+        '-6': -6,
+        '-7': -7,
+        '-8': -8,
+        'skull': 0,
+        'cultist': 0,
+        'tablet': 0,
+        'elderThing': 0,
+        'star': 1,
+        'autofail': -999,
+        'bless': 2,
+        'curse': -2,
+        'frost': -1
+    },
+    campaignOptions: CampaignsAndCards["campaignOptions"],
+    presetTokenBags: CampaignsAndCards["campaignTokenSets"],
+    selectedCampaignTokenSet: null,
+    saveName: null,
+    loadName: null,
+    savedTokenBagConfigs: []
   }),
   getters: {
 
@@ -136,17 +160,21 @@ export const useMainStore = defineStore('mainstore', {
     /* Go through the active abilities selected, and prepare modifiers to token values based 
     on those */
     prepareModifiers() {
-        for (const [k, v] of Object.entries(this.modifiers)) {
-            this.modifiers[k] = {};
+        var store = this
+        for (const [k, v] of Object.entries(store.modifiers)) {
+            store.modifiers[k] = {};
         };
-        if (this.abilitiesActive.length != 0) {
-            this.abilitiesActive.forEach(function (ability, i) {
-                var abilityEffect = this.abilityEffects[ability];
+        if (store.abilitiesActive.length != 0) {
+            store.abilitiesActive.forEach(function (ability, i) {
+                
+                var abilityEffect = store.abilityEffects[ability.trim()];
+                console.log(ability, abilityEffect, store.abilityEffects, store.abilitiesActive)
+
                 for (const [k, v] of Object.entries(abilityEffect)) {
-                    if (Object.keys(this.modifiers[k]).length == 0 || abilityEffect[k]["type"] == 's') {
-                        this.modifiers[k] = v
+                    if (Object.keys(store.modifiers[k]).length == 0 || abilityEffect[k]["type"] == 's') {
+                        store.modifiers[k] = v
                     } else if (modifiers[k]["type"] == 'a') {
-                        this.modifiers[k]["value"] += abilityEffect[k]["value"]
+                        store.modifiers[k]["value"] += abilityEffect[k]["value"]
                     }
                 };
             })
@@ -334,6 +362,68 @@ export const useMainStore = defineStore('mainstore', {
     applyTokenConfig() {
         this.tokens = this.presetTokenBags[this.selectedCampaignTokenSet];
         this.chanceOfSuccess();
+    },
+
+    // Save custom token bag config
+    save() {
+        if (this.saveName == null | this.saveName == "") {
+            window.alert("Invalid name.")
+        } else {
+            if (this.savedTokenBagConfigs.includes(this.saveName)) {
+                if (window.confirm('Are you sure you want to overwrite the existing token bag config with that name?')) {
+                    localStorage.setItem("ArkhamChaosBagProbabilityCalculator-" + this.saveName, JSON.stringify(this.tokens));
+                    this.listAllSaved();
+                }
+            } else {
+                localStorage.setItem("ArkhamChaosBagProbabilityCalculator-" + this.saveName, JSON.stringify(this.tokens));
+                this.listAllSaved();
+            }
+        }  
+    },
+
+    // Load custom token bag config
+    load() {
+        console.log(this.savedTokenBagConfigs)
+        if (this.loadName == null) {
+            window.alert('Invalid file.')
+        } else {
+            const loaded = JSON.parse(localStorage.getItem("ArkhamChaosBagProbabilityCalculator-" + this.loadName));
+            this.tokens = loaded;
+            this.chanceOfSuccess();
+            return loaded;
+        }
+    },
+
+    deleteSave() {
+        if (this.loadName != null & this.loadName != "") {
+            if (window.confirm('Are you sure you want to delete this saved token bag config? This cannot be undone.')) {
+                localStorage.removeItem("ArkhamChaosBagProbabilityCalculator-" + this.loadName)
+                this.loadName = null;
+                this.listAllSaved();
+            }
+        } else {
+            window.alert("No save selected to delete.")
+        }
+    },
+
+    listAllSaved() {
+        var m = []
+        Object.keys(localStorage).forEach((key) => {
+            m.push(
+                key.replace("ArkhamChaosBagProbabilityCalculator-","")
+            )
+        })
+        this.savedTokenBagConfigs = m;
+        console.log('listed', this.savedTokenBagConfigs)
+    },
+
+    // Toggle between -999 and default when "Autofail?" is selected for a token type
+    toggleTokenValueOnAutofailSelect(token) {
+        if (this.tokens[token].value == -999) {
+            this.tokens[token].value = this.defaultTokenValues[token];
+        } else {
+            this.tokens[token].value = -999;
+        }
     }
 
   },
