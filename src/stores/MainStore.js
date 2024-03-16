@@ -275,8 +275,11 @@ export const useMainStore = defineStore('mainstore', {
             var total = store.calculateTotal(previousTotal, token);
             if (token["value"] == autofail_value || token["autofail"]) { // Special case so autofail always has same value / to recognize autofail checkbox
                 store.addToResultsTracker(resultsTracker, total, probMod, autofail_value, true)
-            } else if (lastDraw && lastDraw.toLowerCase().trim() == token["autofailAfter"].toLowerCase().trim()) { // If the previous draw would make this an autofail, do that
-                store.addToResultsTracker(resultsTracker, total, probMod, autofail_value, true)
+            } else if (lastDraw && token["autofailAfter"]) { // If the previous draw would make this an autofail, do that
+                if (lastDraw.toLowerCase().trim() == token["autofailAfter"].toLowerCase().trim()) {
+                    store.addToResultsTracker(resultsTracker, total, probMod, autofail_value, true)
+                }
+                
             } else if (token["redraw"] && store.modifiers[token["name"]]["param"] != 'noRedraw') { // If this is a token that prompts a redraw, do that
                 total = store.calculateTotal(previousTotal, token)
                 if (drawCount + 1 > store.redrawMax) { // If this draw is too many redraws - treat as an autofail to speed up calculation
