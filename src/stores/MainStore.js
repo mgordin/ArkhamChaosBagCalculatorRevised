@@ -126,7 +126,6 @@ export const useMainStore = defineStore('mainstore', {
 
     /* Do all the steps of calculating success chance for all relevant skill values */
     chanceOfSuccess() {
-        console.log("CALCULATING")
         var resultsTracker = {};
         for (let i = -8; i < 3; i++) {
             resultsTracker[i] = 0;
@@ -169,7 +168,6 @@ export const useMainStore = defineStore('mainstore', {
             store.abilitiesActive.forEach(function (ability, i) {
                 
                 var abilityEffect = store.abilityEffects[ability.trim()];
-                console.log(ability, abilityEffect, store.abilityEffects, store.abilitiesActive)
 
                 for (const [k, v] of Object.entries(abilityEffect)) {
                     if (Object.keys(store.modifiers[k]).length == 0 || abilityEffect[k]["type"] == 's') {
@@ -271,31 +269,23 @@ export const useMainStore = defineStore('mainstore', {
     },
     /* Pull a token and resolve its value - called recursively for redraws */
     calculationStep(remainingOptions, previousTotal, probMod, lastDraw, drawCount, autofail_value, resultsTracker) {
-        console.log('last', lastDraw)
-        console.log('inputs are',remainingOptions, previousTotal, probMod, lastDraw, drawCount, autofail_value, resultsTracker)
         var store = this;
         remainingOptions.forEach(function (token, i) {
-            console.log('now drawing', token)
             // Calculate result, assuming now additional stuff happening
             var total = store.calculateTotal(previousTotal, token);
             if (token["value"] == autofail_value || token["autofail"]) { // Special case so autofail always has same value / to recognize autofail checkbox
-                console.log('is autofail')
                 store.addToResultsTracker(resultsTracker, total, probMod, autofail_value, true)
             } else if (lastDraw && lastDraw.toLowerCase().trim() == token["autofailAfter"].toLowerCase().trim()) { // If the previous draw would make this an autofail, do that
-                console.log('should autofail here',token, resultsTracker, total, probMod, autofail_value, true)
                 store.addToResultsTracker(resultsTracker, total, probMod, autofail_value, true)
             } else if (token["redraw"] && store.modifiers[token["name"]]["param"] != 'noRedraw') { // If this is a token that prompts a redraw, do that
-                console.log('is redraw')
                 total = store.calculateTotal(previousTotal, token)
                 if (drawCount + 1 > store.redrawMax) { // If this draw is too many redraws - treat as an autofail to speed up calculation
                     store.handleTooManyRedraws(total, autofail_value, resultsTracker, probMod)
                 } else {
-                    console.log('going into next draw')
                     store.calculationStep(
                         remainingOptions.slice(0, i).concat(remainingOptions.slice(i + 1)), total, probMod / (remainingOptions.length - 1), token["name"], drawCount + 1, autofail_value, resultsTracker)
                 }
             } else { // No redraw - just spit out the current total and probability
-                console.log('just normal')
                 store.addToResultsTracker(resultsTracker, total, probMod, autofail_value, false)
             }
         });
@@ -352,9 +342,7 @@ export const useMainStore = defineStore('mainstore', {
             }
         }
         this.redrawChanceChart_y = [];
-        console.log(allTokensCount, redrawTokensCount, this.redrawChanceChart_y)
         this.redrawProb(1, allTokensCount, redrawTokensCount, 1, n);
-        console.log('redrawChance', this.redrawChanceChart_y)
 
     },
 
@@ -392,7 +380,6 @@ export const useMainStore = defineStore('mainstore', {
 
     // Load custom token bag config
     load() {
-        console.log(this.savedTokenBagConfigs)
         if (this.loadName == null) {
             window.alert('Invalid file.')
         } else {
@@ -423,7 +410,6 @@ export const useMainStore = defineStore('mainstore', {
             )
         })
         this.savedTokenBagConfigs = m;
-        console.log('listed', this.savedTokenBagConfigs)
     },
 
     // Toggle between -999 and default when "Autofail?" is selected for a token type
