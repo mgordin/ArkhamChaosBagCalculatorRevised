@@ -217,24 +217,10 @@ export const useMainStore = defineStore('mainstore', {
         var tokenRegex = /Treat next token as (\+|-)\d/;
         if (this.redrawHandling == "Treat as autofail") {
             this.addToResultsTracker(resultsTracker, total, probMod, autofail_value, true);
-        } else if (this.redrawHandling == "median") {
-            var tokenValues = []
-            this.tokens.forEach(function (token, i) {
-                if (!(token["redraw"]) && token["value"] != autofail_value && !(token["autofail"])) {
-                    tokenValues.push(token["value"])
-                }
-            });
-            var tokenMedian = Math.floor(math.median(tokenValues));
-            this.addToResultsTracker(resultsTracker, total + tokenMedian, probMod, autofail_value, false);
-        } else if (this.redrawHandling == "average") {
-            var tokenValues = []
-            tokens.forEach(function (token, i) {
-                if (!(token["redraw"]) && token["value"] != autofail_value && !(token["autofail"])) {
-                    tokenValues.push(token["value"])
-                }
-            });
-            var tokenAverage = Math.floor(math.mean(tokenValues));
-            this.addToResultsTracker(resultsTracker, total + tokenAverage, probMod, autofail_value, false);
+        } else if (this.redrawHandling == "Treat as median value of non-redraw tokens") {
+            this.addToResultsTracker(resultsTracker, total + this.medianNonRedrawTokenValue(autofail_value), probMod, autofail_value, false);
+        } else if (this.redrawHandling == "Treat as average value of non-redraw tokens") {
+            this.addToResultsTracker(resultsTracker, total + this.averageNonRedrawTokenValue(autofail_value), probMod, autofail_value, false);
         } else if (tokenRegex.test(this.redrawHandling)) {
             var tokenValue = parseInt(this.redrawHandling.substring(this.redrawHandling.length - 2))
             this. addToResultsTracker(resultsTracker, total + tokenValue, probMod, autofail_value, false);
@@ -271,24 +257,32 @@ export const useMainStore = defineStore('mainstore', {
     calculationStep(remainingOptions, previousTotal, probMod, lastDraw, drawCount, autofail_value, resultsTracker) {
         var store = this;
         remainingOptions.forEach(function (token, i) {
+            // console.log('current token: ',token, 'previous token: ',lastDraw, '# draws: ', drawCount, "previousTotal: ", previousTotal, "resultsTracker: ", resultsTracker, "probMod: ", probMod)
             // Calculate result, assuming now additional stuff happening
             var total = store.calculateTotal(previousTotal, token);
-            if (token["value"] == autofail_value || token["autofail"]) { // Special case so autofail always has same value / to recognize autofail checkbox
+            // Special case so autofail always has same value / to recognize autofail checkbox
+            if (token["value"] == autofail_value || token["autofail"]) { 
                 store.addToResultsTracker(resultsTracker, total, probMod, autofail_value, true)
             } else if (lastDraw && token["autofailAfter"]) { // If the previous draw would make this an autofail, do that
                 if (lastDraw.toLowerCase().trim() == token["autofailAfter"].toLowerCase().trim()) {
                     store.addToResultsTracker(resultsTracker, total, probMod, autofail_value, true)
                 }
-                
-            } else if (token["redraw"] && store.modifiers[token["name"]]["param"] != 'noRedraw') { // If this is a token that prompts a redraw, do that
-                total = store.calculateTotal(previousTotal, token)
-                if (drawCount + 1 > store.redrawMax) { // If this draw is too many redraws - treat as an autofail to speed up calculation
+            // If this is a token that prompts a redraw...
+            } else if (token["redraw"] && store.modifiers[token["name"]]["param"] != 'noRedraw') { 
+                // If this would be too many redraws
+                if (drawCount + 1 > store.redrawMax) { 
                     store.handleTooManyRedraws(total, autofail_value, resultsTracker, probMod)
+                // If there are no more tokens left
+                } else if (remainingOptions.length - 1 == 0) {
+                    store.addToResultsTracker(resultsTracker, total, probMod, autofail_value, false)
+                    console.log("Ran out of tokens to draw...")
+                // Do the redraw
                 } else {
                     store.calculationStep(
                         remainingOptions.slice(0, i).concat(remainingOptions.slice(i + 1)), total, probMod / (remainingOptions.length - 1), token["name"], drawCount + 1, autofail_value, resultsTracker)
                 }
-            } else { // No redraw - just spit out the current total and probability
+            // No redraw - just spit out the current total and probability
+            } else { 
                 store.addToResultsTracker(resultsTracker, total, probMod, autofail_value, false)
             }
         });
@@ -408,9 +402,11 @@ export const useMainStore = defineStore('mainstore', {
     listAllSaved() {
         var m = []
         Object.keys(localStorage).forEach((key) => {
-            m.push(
-                key.replace("ArkhamChaosBagProbabilityCalculator-","")
-            )
+            if (key.includes("ArkhamChaosBagProbabilityCalculator-")) {
+                m.push(
+                    key.replace("ArkhamChaosBagProbabilityCalculator-","")
+                )
+            }
         })
         this.savedTokenBagConfigs = m;
     },
@@ -422,7 +418,26 @@ export const useMainStore = defineStore('mainstore', {
         } else {
             this.tokens[token].value = -999;
         }
-    }
+    },
+
+    openWindow() {
+        window.open('https://github.com/mgordin/ArkhamChaosBagCalculatorRevised', '_blank');
+    },
+
+    // Calcualte the average value of NON-REDRAW tokens in the bag, rounded up
+    averageNonRedrawTokenValue(autofail_value) {
+        var nonRedrawTokens = [];
+        for (const [tokenName, tokenInfo] of Object.entries(this.tokens)) {
+            if ( !(tokenInfo["redraw"]) & !(tokenInfo["autofail"]) & tokenInfo["value"] != autofail_value) {
+                for (let i = 0; i < tokenInfo["count"]; i++) {
+                    nonRedrawTokens.push(tokenInfo["value"])
+                }
+            }
+          }
+        const sumTokenValues = nonRedrawTokens.reduce((partialSum, a) => partialSum + a, 0);
+        const average = sumTokenValues / nonRedrawTokens.length;
+        return average
+    },
 
   },
 })

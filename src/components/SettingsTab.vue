@@ -21,7 +21,9 @@
         <v-select
           label="Handling redraws over max"
           :items="[
-            'Treat as autofail',
+            'Treat as average value of non-redraw tokens',
+            'Treat next token as +1',
+            'Treat next token as +0',
             'Treat next token as -1',
             'Treat next token as -2',
             'Treat next token as -3',
@@ -30,6 +32,7 @@
             'Treat next token as -6',
             'Treat next token as -7',
             'Treat next token as -8',
+            'Treat as autofail',
           ]"
           v-model="mainstore.redrawHandling"
         ></v-select>

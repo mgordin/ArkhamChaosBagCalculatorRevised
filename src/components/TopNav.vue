@@ -25,6 +25,9 @@
       v-model="mainstore.tokens['frost'].count"
       type="number"
     ></v-text-field>
+    <v-btn class="github-button" icon @click="mainstore.openWindow">
+      <v-icon>mdi-github</v-icon>
+    </v-btn>
 
     <v-btn variant="tonal" color="green" @click="mainstore.chanceOfSuccess">
       <v-icon icon="mdi-play" start></v-icon>
@@ -42,6 +45,10 @@ const mainstore = useMainStore();
 <style scoped>
 .title-bar-input-field {
   max-width: 10vw;
+  margin-right: 1vw;
+}
+
+.github-button {
   margin-right: 1vw;
 }
 </style>
