@@ -3,6 +3,8 @@
     <v-main>
       <TopNav></TopNav>
       <ProbabilitiesChart></ProbabilitiesChart>
+      <v-divider class="pa-md-4 mx-lg-auto"></v-divider>
+      <ChanceToDrawChart></ChanceToDrawChart>
       <Tabs></Tabs>
     </v-main>
   </v-app>
@@ -10,8 +12,9 @@
 
 <script setup>
 import TopNav from "./components/TopNav.vue";
-import Tab from "./components/Tabs.vue";
+import Tabs from "./components/Tabs.vue";
 import ProbabilitiesChart from "./components/ProbabilitiesChart";
+import ChanceToDrawChart from "./components/ChanceToDrawChart";
 
 import { useTheme } from "vuetify";
 const theme = useTheme();
