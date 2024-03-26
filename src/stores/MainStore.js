@@ -128,7 +128,9 @@ export const useMainStore = defineStore('mainstore', {
         'bless': 0,
         'curse': 0,
         'frost': 0
-    }
+    },
+    bag: null,
+    tokenSize: 35
   }),
   getters: {
 
@@ -152,9 +154,10 @@ export const useMainStore = defineStore('mainstore', {
             'curse': 0,
             'frost': 0
         }
-        var bag = this.currentBag();
+        this.bag = this.currentBag();
+        console.log('bag', this.bag)
         this.prepareModifiers();
-        this.calculationStep(bag, 0, 1 / bag.length, null, 1, this.tokens['autofail']["value"], resultsTracker);
+        this.calculationStep(this.bag, 0, 1 / this.bag.length, null, 1, this.tokens['autofail']["value"], resultsTracker);
         this.probabilitiesChart_y = this.cumulativeProb(resultsTracker);
         document.body.scrollTop = 0;
         document.documentElement.scrollTop = 0;

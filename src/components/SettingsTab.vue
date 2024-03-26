@@ -46,6 +46,19 @@
 
     <RedrawChanceChart></RedrawChanceChart>
   </v-container>
+
+  <div class="text-h3 pa-mb-4">Other Settings</div>
+  <v-container>
+    <v-row>
+      <v-col cols="auto">
+        <v-text-field
+          label="'Current Bag' Token Image Size (px)"
+          v-model="mainstore.tokenSize"
+          type="number"
+        ></v-text-field>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script setup>
