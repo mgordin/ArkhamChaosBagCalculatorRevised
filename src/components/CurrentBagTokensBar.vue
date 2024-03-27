@@ -9,7 +9,7 @@
           :width="mainstore.tokenSize"
           aspect-ratio="1"
           cover
-          :src="`./../../public/ChaosTokens/Chaos Token ${token.name}.png`"
+          :src="`/public/ChaosTokens/Chaos Token ${token.name}.png`"
           @click="console.log(mainstore.bag)"
         ></v-img>
       </v-col>
