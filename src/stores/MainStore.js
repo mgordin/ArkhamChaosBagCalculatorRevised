@@ -155,15 +155,15 @@ export const useMainStore = defineStore('mainstore', {
             'frost': 0
         }
         this.bag = this.currentBag();
-        console.log('bag', this.bag)
+        //console.log('bag', this.bag)
         this.prepareModifiers();
         this.calculationStep(this.bag, 0, 1 / this.bag.length, null, 1, this.tokens['autofail']["value"], resultsTracker);
-        console.log('resultsTracker', resultsTracker)
+        //console.log('resultsTracker', resultsTracker)
         this.probabilitiesChart_y = this.cumulativeProb(resultsTracker);
         document.body.scrollTop = 0;
         document.documentElement.scrollTop = 0;
         //saveData(saveName, data);
-        console.log(this.chanceToDraw)
+        //console.log(this.chanceToDraw)
     },
 
     /* Generate the "bag" of tokens - an array with one object per token in the bag whose
@@ -288,17 +288,17 @@ export const useMainStore = defineStore('mainstore', {
             // console.log('current token: ',token, 'previous token: ',lastDraw, '# draws: ', drawCount, "previousTotal: ", previousTotal, "resultsTracker: ", resultsTracker, "probMod: ", probMod)
             // Calculate result, assuming now additional stuff happening
             var total = store.calculateTotal(previousTotal, token);
-            console.log('calculationStep - token = ', token, 'total = ', total, 'prob = ', probMod*100)
+            //console.log('calculationStep - token = ', token, 'total = ', total, 'prob = ', probMod*100)
             // Special case so autofail always has same value / to recognize autofail checkbox
             if (token["value"] == autofail_value || token["autofail"]) { 
-                console.error('autofail')
+                //console.error('autofail')
                 store.addToResultsTracker(resultsTracker, total, probMod, autofail_value, true)
                 if (Object.keys(store.chanceToDraw).includes(token.name)) {
                     store.chanceToDraw[token.name] += probMod * 100
                 }
                 
             } else if (lastDraw && token["autofailAfter"]) { // If the previous draw would make this an autofail, do that
-                console.error('autofail after')
+                //console.error('autofail after')
                 if (lastDraw.toLowerCase().trim() == token["autofailAfter"].toLowerCase().trim()) {
                     store.addToResultsTracker(resultsTracker, total, probMod, autofail_value, true)
                     if (Object.keys(store.chanceToDraw).includes(token.name)) {
@@ -308,7 +308,7 @@ export const useMainStore = defineStore('mainstore', {
                 
             // If this is a token that prompts a redraw...
             } else if (token["redraw"] && store.modifiers[token["name"]]["param"] != 'noRedraw') { 
-                console.error('redraw some stuff')
+                //console.error('redraw some stuff')
                 // If this would be too many redraws
                 if (drawCount + 1 > store.redrawMax) { 
                     store.handleTooManyRedraws(total, autofail_value, resultsTracker, probMod)
@@ -333,7 +333,7 @@ export const useMainStore = defineStore('mainstore', {
                 
             // No redraw - just spit out the current total and probability
             } else { 
-                console.log('just normal;')
+                //console.log('just normal;')
                 store.addToResultsTracker(resultsTracker, total, probMod, autofail_value, false)
                 if (Object.keys(store.chanceToDraw).includes(token.name)) {
                     store.chanceToDraw[token.name] += probMod * 100
